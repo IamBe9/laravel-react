@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Layout from '../layouts/Layout';
 import Form from '../components/forms/Form';
 import Input from '../components/forms/Input';
@@ -6,6 +6,13 @@ import Select from '../components/forms/Select';
 import Checkbox from '../components/forms/Checkbox';
 import Button from '../components/forms/Button';
 import Divider from '../components/forms/Divider';
+import PageHeading from '../components/PageHeading';
+import SectionHeading from '../components/SectionHeading';
+import JobCard from '../components/JobCard';
+import JobCardWide from '../components/JobCardWide';
+import EmployerLogo from '../components/EmployerLogo';
+import Panel from '../components/Panel';
+import Tag from '../components/Tag';
 
 interface Job {
     id: number;
@@ -49,115 +56,121 @@ interface JobFormValues {
 }
 
 const TestPage: React.FC<TestPageProps> = ({ jobs: initialJobs, employers, tags }) => {
+    const [searchTerm, setSearchTerm] = useState('');
+    const [isWideLayout, setIsWideLayout] = useState(false);
+
+    // Фильтрация вакансий по поиску
+    const filteredJobs = initialJobs.filter((job) =>
+        job.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     return (
         <Layout>
-            <div className="max-w-4xl mx-auto">
-                <h1 className="text-2xl font-bold mb-6">Test Page</h1>
-
-                {/* Форма для создания вакансии */}
-                <h2 className="text-xl font-semibold mb-4">Create a Job</h2>
-                <Form<JobFormValues>
-                    action="/jobs"
-                    method="post"
-                    initialValues={{
-                        title: '',
-                        salary: '',
-                        location: '',
-                        schedule: 'Full Time',
-                        url: '',
-                        featured: false,
-                        tags: '',
-                    }}
-                    onSubmit={(form) => {
-                        form.post('/jobs', {
-                            preserveState: true,
-                            onSuccess: () => {
-                                form.reset();
-                            },
-                        });
-                    }}
-                >
-                    {({ errors }) => (
-                        <>
-                            <Input label="Title" name="title" required error={errors.title} />
-                            <Input label="Salary" name="salary" required error={errors.salary} />
-                            <Input label="Location" name="location" required error={errors.location} />
-                            <Select label="Schedule" name="schedule" required error={errors.schedule}>
-                                <option value="Full Time">Full Time</option>
-                                <option value="Part Time">Part Time</option>
-                            </Select>
-                            <Input label="Application URL" name="url" type="url" required error={errors.url} />
-                            <Checkbox label="Featured Job" name="featured" />
-                            <Input
-                                label="Tags (comma-separated)"
-                                name="tags"
-                                placeholder="e.g., php, laravel, remote"
-                                error={errors.tags}
-                            />
-                            <Button type="submit">Create Job</Button>
-                        </>
-                    )}
-                </Form>
-
-                <Divider />
-
-                {/* Список вакансий */}
-                <h2 className="text-xl font-semibold mb-4">Jobs</h2>
-                {initialJobs.length > 0 ? (
-                    <ul className="space-y-4">
-                        {initialJobs.map((job) => (
-                            <li
-                                key={job.id}
-                                className="border border-white/10 p-4 rounded-lg"
-                            >
-                                <strong>{job.title}</strong> - {job.salary} ({job.schedule}) at {job.location}
-                                <br />
-                                Employer: {job.employer?.name ?? 'No employer'}
-                                <br />
-                                Tags: {job.tags?.map((tag) => tag.name).join(', ') || 'No tags'}
-                            </li>
-                        ))}
-                    </ul>
-                ) : (
-                    <p>No jobs found.</p>
-                )}
-
-                <Divider />
-
-                {/* Список работодателей */}
-                <h2 className="text-xl font-semibold mb-4">Employers</h2>
-                {employers.length > 0 ? (
-                    <ul className="space-y-4">
-                        {employers.map((employer) => (
-                            <li key={employer.id}>
-                                <strong>{employer.name}</strong> (Logo: {employer.logo})
-                                <br />
-                                User: {employer.user?.name ?? 'No user'} ({employer.user?.email ?? 'No email'})
-                            </li>
-                        ))}
-                    </ul>
-                ) : (
-                    <p>No employers found.</p>
-                )}
-
-                <Divider />
-
-                {/* Список тегов */}
-                <h2 className="text-xl font-semibold mb-4">Tags</h2>
-                {tags.length > 0 ? (
-                    <ul className="space-y-4">
-                        {tags.map((tag) => (
-                            <li key={tag.id}>
-                                <strong>{tag.name}</strong>
-                                <br />
-                                Jobs: {tag.jobs?.map((job) => job.title).join(', ') || 'No jobs'}
-                            </li>
-                        ))}
-                    </ul>
-                ) : (
-                    <p>No tags found.</p>
-                )}
+            <div className="text-center mt-10">
+                <h2 className="text-4xl font-bold text-white">Let's Find Your Next Job</h2>
+                <input
+                    type="text"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    placeholder="Web Developer..."
+                    className="mt-6 w-full max-w-md p-3 bg-gray-800 text-white rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
             </div>
+
+            <Divider />
+
+            {/* Featured Jobs */}
+            <SectionHeading>Featured Jobs</SectionHeading>
+            {filteredJobs.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+                    {filteredJobs.slice(0, 3).map((job) =>
+                        isWideLayout ? (
+                            <JobCardWide key={job.id} job={job} />
+                        ) : (
+                            <JobCard key={job.id} job={job} />
+                        )
+                    )}
+                </div>
+            ) : (
+                <p>No featured jobs found.</p>
+            )}
+
+            <Divider />
+
+            {/* Tags */}
+            <SectionHeading>Tags</SectionHeading>
+            {tags.length > 0 ? (
+                <Panel>
+                    <div className="flex flex-wrap gap-2 mt-4">
+                        {tags.map((tag) => (
+                            <Tag key={tag.id} tag={tag} />
+                        ))}
+                    </div>
+                </Panel>
+            ) : (
+                <p>No tags found.</p>
+            )}
+
+            <Divider />
+
+            {/* Recent Jobs */}
+            <SectionHeading>Recent Jobs</SectionHeading>
+            {filteredJobs.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 mt-6">
+                    {filteredJobs.map((job) => (
+                        <JobCardWide key={job.id} job={job} />
+                    ))}
+                </div>
+            ) : (
+                <p>No recent jobs found.</p>
+            )}
+
+            <Divider />
+
+            {/* Форма для создания вакансии (оставляем для тестирования) */}
+            <SectionHeading>Create a Job</SectionHeading>
+            <Form<JobFormValues>
+                action="/jobs"
+                method="post"
+                initialValues={{
+                    title: '',
+                    salary: '',
+                    location: '',
+                    schedule: 'Full Time',
+                    url: '',
+                    featured: false,
+                    tags: '',
+                }}
+                onSubmit={(form) => {
+                    form.post('/jobs', {
+                        preserveState: true,
+                        onSuccess: () => {
+                            form.reset();
+                        },
+                    });
+                }}
+            >
+                {({ errors }) => (
+                    <>
+                        <Input label="Title" name="title" required error={errors.title} />
+                        <Input label="Salary" name="salary" required error={errors.salary} />
+                        <Input label="Location" name="location" required error={errors.location} />
+                        <Select label="Schedule" name="schedule" required error={errors.schedule}>
+                            <option value="Full Time">Full Time</option>
+                            <option value="Part Time">Part Time</option>
+                        </Select>
+                        <Input label="Application URL" name="url" type="url" required error={errors.url} />
+                        <Checkbox label="Featured Job" name="featured" />
+                        <Input
+                            label="Tags (comma-separated)"
+                            name="tags"
+                            placeholder="e.g., php, laravel, remote"
+                            error={errors.tags}
+                        />
+                        <Button type="submit">Create Job</Button>
+                    </>
+                )}
+            </Form>
         </Layout>
     );
 };
