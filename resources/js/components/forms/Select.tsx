@@ -5,11 +5,12 @@ interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
     label: string;
     name: string;
     children: React.ReactNode;
+    error?: string;
 }
 
-const Select: React.FC<SelectProps> = ({ label, name, children, className = '', ...props }) => {
+const Select: React.FC<SelectProps> = ({ label, name, children, className = '', error, ...props }) => {
     return (
-        <Field label={label} name={name}>
+        <Field label={label} name={name} error={error}>
             <select
                 id={name}
                 name={name}

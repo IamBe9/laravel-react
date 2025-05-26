@@ -1,36 +1,43 @@
-import React from "react";
+import React from 'react';
+import { useForm } from '@inertiajs/react';
 
-type FormProps = {
-    method?: "GET" | "POST" | "PUT" | "DELETE" | string;
-    action?: string;
-    className?: string;
-    children: React.ReactNode;
-};
+interface FormProps<T extends Record<string, any>> {
+    children: (form: ReturnType<typeof useForm<T>>) => React.ReactNode;
+    action: string;
+    method?: 'get' | 'post' | 'put' | 'delete';
+    initialValues?: T;
+    onSubmit?: (form: ReturnType<typeof useForm<T>>) => void;
+}
 
-export const Form: React.FC<FormProps> = ({
-                                              method = "GET",
-                                              action = "",
-                                              className = "max-w-2xl mx-auto space-y-6",
-                                              children,
-                                          }) => {
-    const isGet = method.toUpperCase() === "GET";
-    const spoofMethod = !isGet ? method.toUpperCase() : undefined;
+const Form = <T extends Record<string, any>>({
+                                                 children,
+                                                 action,
+                                                 method = 'get',
+                                                 initialValues = {} as T,
+                                                 onSubmit,
+                                             }: FormProps<T>) => {
+    const form = useForm<T>(initialValues);
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (onSubmit) {
+            onSubmit(form);
+        } else if (method === 'get') {
+            form.get(action, { preserveState: true });
+        } else {
+            form.post(action, { preserveState: true });
+        }
+    };
 
     return (
         <form
-            method={isGet ? "GET" : "POST"}
-            action={action}
-            className={className}
+            onSubmit={handleSubmit}
+            className="max-w-2xl mx-auto space-y-6"
+            method={method === 'get' ? 'GET' : 'POST'}
         >
-            {!isGet && (
-                <>
-                    {/* В реальном приложении CSRF-токен должен приходить из props или контекста */}
-                    <input type="hidden" name="_token" value="CSRF_TOKEN_PLACEHOLDER" />
-                    <input type="hidden" name="_method" value={spoofMethod} />
-                </>
-            )}
-
-            {children}
+            {children(form)}
         </form>
     );
 };
+
+export default Form;

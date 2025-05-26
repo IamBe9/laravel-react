@@ -4,11 +4,12 @@ import Field from './Field';
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
     label: string;
     name: string;
+    error?: string;
 }
 
-const Input: React.FC<InputProps> = ({ label, name, className = '', ...props }) => {
+const Input: React.FC<InputProps> = ({ label, name, className = '', error, ...props }) => {
     return (
-        <Field label={label} name={name}>
+        <Field label={label} name={name} error={error}>
             <input
                 type="text"
                 id={name}
