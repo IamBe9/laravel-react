@@ -30,9 +30,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                     </div>
 
                     <div className="space-x-6 font-bold flex">
-                        <Link href="/jobs/create">Post a Job</Link>
+                        <Link href="/">Log Out</Link>
                         <form onSubmit={handleLogout}>
-                            <button type="submit">Log Out</button>
+                            <button type="submit">Change Account</button>
                         </form>
                     </div>
                 </nav>
