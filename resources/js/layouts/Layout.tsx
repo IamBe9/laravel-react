@@ -44,10 +44,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                         <div className="group">
                             <Link href="#" className={linkClasses}>Companies</Link>
                         </div>
-                        <Divider />
-                        <div className="group">
-                            <Link href="#" className={linkClasses}>Extra Information</Link>
-                        </div>
                     </div>
 
                     <div className="flex items-center font-bold">
