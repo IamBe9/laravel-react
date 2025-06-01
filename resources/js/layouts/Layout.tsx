@@ -12,6 +12,12 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         Inertia.post('/logout', {}, { preserveState: false });
     };
 
+    const linkClasses = "group-hover:text-blue-800 font-bold transition-colors duration-300";
+
+    const Divider = () => (
+        <div className="w-px h-4 bg-white/20 mx-2" />
+    );
+
     return (
         <div className="bg-black text-white font-hanken-grotesk pb-20">
             <div className="px-10">
@@ -22,17 +28,39 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                         </Link>
                     </div>
 
-                    <div className="space-x-6 font-bold">
-                        <Link href="/">Jobs</Link>
-                        <Link href="#">Careers</Link>
-                        <Link href="#">Salaries</Link>
-                        <Link href="#">Companies</Link>
+                    <div className="flex items-center font-bold">
+                        <div className="group">
+                            <Link href="/" className={linkClasses}>Jobs</Link>
+                        </div>
+                        <Divider />
+                        <div className="group">
+                            <Link href="#" className={linkClasses}>Careers</Link>
+                        </div>
+                        <Divider />
+                        <div className="group">
+                            <Link href="#" className={linkClasses}>Salaries</Link>
+                        </div>
+                        <Divider />
+                        <div className="group">
+                            <Link href="#" className={linkClasses}>Companies</Link>
+                        </div>
+                        <Divider />
+                        <div className="group">
+                            <Link href="#" className={linkClasses}>Extra Information</Link>
+                        </div>
                     </div>
 
-                    <div className="space-x-6 font-bold flex">
-                        <Link href="/">Log Out</Link>
-                        <form onSubmit={handleLogout}>
-                            <button type="submit">Change Account</button>
+                    <div className="flex items-center font-bold">
+                        <div className="group">
+                            <Link href="/" className={linkClasses}>Main Page</Link>
+                        </div>
+                        <Divider />
+                        <form onSubmit={handleLogout} className="group-hover:text-blue-800 font-bold transition-colors duration-300">
+                            <button
+                                type="submit"
+                            >
+                                Change Account
+                            </button>
                         </form>
                     </div>
                 </nav>
