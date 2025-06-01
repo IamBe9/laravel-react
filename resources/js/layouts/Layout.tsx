@@ -34,15 +34,15 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                         </div>
                         <Divider />
                         <div className="group">
-                            <Link href="#" className={linkClasses}>Careers</Link>
+                            <Link href="/test" className={linkClasses}>Careers</Link>
                         </div>
                         <Divider />
                         <div className="group">
-                            <Link href="#" className={linkClasses}>Salaries</Link>
+                            <Link href="/test" className={linkClasses}>Salaries</Link>
                         </div>
                         <Divider />
                         <div className="group">
-                            <Link href="#" className={linkClasses}>Companies</Link>
+                            <Link href="/test" className={linkClasses}>Companies</Link>
                         </div>
                     </div>
 

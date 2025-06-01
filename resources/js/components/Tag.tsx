@@ -2,24 +2,23 @@ import React from 'react';
 import { Link } from '@inertiajs/react';
 
 interface TagType {
+    id: number;
     name: string;
+    jobs: { id: number; title: string }[];
 }
 
 interface TagProps {
     tag: TagType;
-    size?: 'base' | 'small';
+    size?: 'small' | 'large';
 }
 
-const Tag: React.FC<TagProps> = ({ tag, size = 'base' }) => {
-    const baseClasses =
-        'bg-white/10 hover:bg-white/25 rounded-xl font-bold transition-colors duration-300';
-    const sizeClasses = size === 'base' ? 'px-5 py-1 text-sm' : 'px-3 py-1 text-2xs';
+const Tag: React.FC<TagProps> = ({ tag, size = 'large' }) => {
+    const baseClasses = 'rounded-full px-4 py-2 text-sm transition-colors duration-300';
+    const sizeClasses = size === 'small' ? 'px-2 py-1 text-xs' : 'px-4 py-2 text-sm';
+    const hoverClasses = 'hover:bg-blue-800 hover:text-white';
 
     return (
-        <Link
-            href={`/tags/${tag.name.toLowerCase()}`}
-            className={`${baseClasses} ${sizeClasses}`}
-        >
+        <Link href={`/tags/${encodeURIComponent(tag.name)}`} className={`${baseClasses} ${sizeClasses} ${hoverClasses} bg-gray-800 text-white`}>
             {tag.name}
         </Link>
     );
