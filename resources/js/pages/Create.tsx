@@ -2,16 +2,28 @@ import React from 'react';
 import Layout from '../layouts/Layout';
 import PageHeading from '../components/PageHeading';
 import Input from '../components/forms/Input';
+import Select from '../components/forms/Select';
+import Checkbox from '../components/forms/Checkbox';
+import Button from '../components/forms/Button';
 import { useForm } from '@inertiajs/react';
 
-interface CreateProps {}
-
-const Create: React.FC<CreateProps> = () => {
-    const { data, setData, post, processing, errors } = useForm({
+const Create: React.FC<{}> = () => {
+    const { data, setData, post, processing, errors } = useForm<{
+        title: string;
+        salary: string;
+        location: string;
+        schedule: string;
+        url: string;
+        featured: boolean;
+        tags: string;
+    }>({
         title: '',
         salary: '',
         location: '',
-        description: '',
+        schedule: '',
+        url: '',
+        featured: false,
+        tags: '',
     });
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -25,13 +37,14 @@ const Create: React.FC<CreateProps> = () => {
 
     return (
         <Layout>
-            <PageHeading>Create a New Job</PageHeading>
+            <PageHeading>New Job</PageHeading>
             <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-6">
                 <Input
                     label="Title"
                     name="title"
                     value={data.title}
                     onChange={(e) => setData('title', e.target.value)}
+                    placeholder="CEO"
                     error={errors.title}
                 />
                 <Input
@@ -39,6 +52,7 @@ const Create: React.FC<CreateProps> = () => {
                     name="salary"
                     value={data.salary}
                     onChange={(e) => setData('salary', e.target.value)}
+                    placeholder="$90,000 USD"
                     error={errors.salary}
                 />
                 <Input
@@ -46,31 +60,47 @@ const Create: React.FC<CreateProps> = () => {
                     name="location"
                     value={data.location}
                     onChange={(e) => setData('location', e.target.value)}
+                    placeholder="Winter Park, Florida"
                     error={errors.location}
                 />
-                <div>
-                    <label htmlFor="description" className="block text-sm font-medium text-white mb-1">
-                        Description
-                    </label>
-                    <textarea
-                        id="description"
-                        name="description"
-                        value={data.description}
-                        onChange={(e) => setData('description', e.target.value)}
-                        className="w-full bg-gray-800 text-white placeholder-gray-400 rounded-md px-4 py-2 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        rows={5}
-                    />
-                    {errors.description && (
-                        <p className="mt-1 text-sm text-red-500">{errors.description}</p>
-                    )}
-                </div>
-                <button
-                    type="submit"
-                    disabled={processing}
-                    className="w-full bg-blue-600 text-white py-2 rounded-full hover:bg-blue-700 disabled:bg-gray-400"
+                <Select
+                    label="Schedule"
+                    name="schedule"
+                    value={data.schedule}
+                    onChange={(e) => setData('schedule', e.target.value)}
+                    error={errors.schedule}
                 >
-                    Create Job
-                </button>
+                    <option value="">Select Schedule</option>
+                    <option value="Part Time">Part Time</option>
+                    <option value="Full Time">Full Time</option>
+                </Select>
+                <Input
+                    label="URL"
+                    name="url"
+                    value={data.url}
+                    onChange={(e) => setData('url', e.target.value)}
+                    placeholder="https://acme.com/jobs/ceo-wanted"
+                    error={errors.url}
+                />
+                <Checkbox
+                    label="Feature (Costs Extra)"
+                    name="featured"
+                    checked={data.featured}
+                    onChange={(e) => setData('featured', e.target.checked)}
+                    error={errors.featured}
+                />
+                <div className="border-t border-white/10 my-4" />
+                <Input
+                    label="Tags (comma separated)"
+                    name="tags"
+                    value={data.tags}
+                    onChange={(e) => setData('tags', e.target.value)}
+                    placeholder="laracasts, video, education"
+                    error={errors.tags}
+                />
+                <Button type="submit" disabled={processing}>
+                    Publish
+                </Button>
             </form>
         </Layout>
     );

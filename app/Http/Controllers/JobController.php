@@ -17,7 +17,7 @@ class JobController extends Controller
 
     public function create()
     {
-        return Inertia::render('Create'); // Указываем просто 'Create', так как файл в pages/
+        return Inertia::render('Create');
     }
 
     public function store(Request $request)
@@ -26,10 +26,29 @@ class JobController extends Controller
             'title' => 'required|string|max:255',
             'salary' => 'required|string',
             'location' => 'required|string|max:255',
-            'description' => 'required|string',
+            'schedule' => 'required|string|in:Part Time,Full Time',
+            'url' => 'required|url',
+            'featured' => 'boolean',
+            'tags' => 'required|string',
         ]);
 
-        $job = auth()->user()->employer->jobs()->create($validated);
+        $job = auth()->user()->employer->jobs()->create([
+            'title' => $validated['title'],
+            'salary' => $validated['salary'],
+            'location' => $validated['location'],
+            'schedule' => $validated['schedule'],
+            'url' => $validated['url'],
+            'featured' => $validated['featured'] ?? false,
+        ]);
+
+        // Обработка тегов (предполагаем, что tags — строка, разделенная запятыми)
+        if (!empty($validated['tags'])) {
+            $tagNames = array_map('trim', explode(',', $validated['tags']));
+            $tags = collect($tagNames)->map(function ($name) {
+                return \App\Models\Tag::firstOrCreate(['name' => $name])->id;
+            })->all();
+            $job->tags()->sync($tags);
+        }
 
         return redirect('/jobs')->with('success', 'Job created successfully.');
     }

@@ -1,20 +1,29 @@
 import React from 'react';
-import Field from './Field';
 
-interface CheckboxProps extends React.InputHTMLAttributes<HTMLInputElement> {
+interface CheckboxProps {
     label: string;
     name: string;
-    error?: string;
+    checked: boolean;
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    error?: string | undefined;
 }
 
-const Checkbox: React.FC<CheckboxProps> = ({ label, name, className = '', error, ...props }) => {
+const Checkbox: React.FC<CheckboxProps> = ({ label, name, checked, onChange, error }) => {
     return (
-        <Field label={label} name={name} error={error}>
-            <div className={`rounded-xl bg-white/10 border border-white/10 px-5 py-4 w-full ${className}`}>
-                <input type="checkbox" id={name} name={name} {...props} />
-                <span className="pl-1">{label}</span>
-            </div>
-        </Field>
+        <div className="flex items-center space-x-2">
+            <input
+                type="checkbox"
+                id={name}
+                name={name}
+                checked={checked}
+                onChange={onChange}
+                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-600 bg-gray-800 rounded"
+            />
+            <label htmlFor={name} className="text-sm font-medium text-white">
+                {label}
+            </label>
+            {error && <p className="text-sm text-red-500">{error}</p>}
+        </div>
     );
 };
 
