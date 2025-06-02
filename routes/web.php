@@ -21,6 +21,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 Route::get('/test', [TestController::class, 'index'])->name('test');
 Route::get('/results', [SearchController::class, 'index'])->name('results');
+Route::get('/jobs', [JobController::class, 'index'])->name('jobs.index');
 
 Route::get('/jobs/create', [JobController::class, 'create'])->middleware('auth');
 Route::post('/jobs', [JobController::class, 'store'])->middleware('auth')->name('jobs.store');

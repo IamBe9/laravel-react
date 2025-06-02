@@ -48,7 +48,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
                     <div className="flex items-center font-bold">
                         <div className="group">
-                            <Link href="/" className={linkClasses}>Main Page</Link>
+                            <Link href="/jobs/create" className={linkClasses}>Post A Job</Link>
                         </div>
                         <Divider />
                         <form onSubmit={handleLogout} className="group-hover:text-blue-800 font-bold transition-colors duration-300">
