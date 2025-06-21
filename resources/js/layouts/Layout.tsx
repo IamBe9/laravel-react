@@ -55,7 +55,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                             <button
                                 type="submit"
                             >
-                                Change Account
+                                Change Account or Logout
                             </button>
                         </form>
                     </div>
